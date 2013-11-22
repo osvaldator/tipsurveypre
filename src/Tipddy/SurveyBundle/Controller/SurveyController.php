@@ -27,28 +27,28 @@ class SurveyController extends Controller
 
         return $this->render('TipddySurveyBundle:Survey:index.html.twig', array(
             'entities' => $entities,
-        ));
+            ));
     }
     
     
     public function questionsAction(Request $request, $id)
     {
-       $em = $this->getDoctrine()->getManager();
-       
-       $entity = $em->getRepository('TipddySurveyBundle:Survey')->find($id);
-       
-       if (!$entity) {
-	        throw $this->createNotFoundException('Unable to find Survey entity.');
-       }
-       
-       $session = $request->getSession();
-       $session->set('survey', $entity->getId());
-       
-       return $this->redirect($this->generateUrl('question'));
-	    
-    }
-       
-    
+     $em = $this->getDoctrine()->getManager();
+
+     $entity = $em->getRepository('TipddySurveyBundle:Survey')->find($id);
+
+     if (!$entity) {
+       throw $this->createNotFoundException('Unable to find Survey entity.');
+   }
+
+   $session = $request->getSession();
+   $session->set('survey', $entity->getId());
+
+   return $this->redirect($this->generateUrl('question'));
+
+}
+
+
     /**
      * Creates a new Survey entity.
      *
@@ -70,7 +70,7 @@ class SurveyController extends Controller
         return $this->render('TipddySurveyBundle:Survey:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-        ));
+            ));
     }
 
     /**
@@ -85,7 +85,7 @@ class SurveyController extends Controller
         $form = $this->createForm(new SurveyType(), $entity, array(
             'action' => $this->generateUrl('survey_create'),
             'method' => 'POST',
-        ));
+            ));
 
         $form->add('submit', 'submit', array('label' => 'Create'));
 
@@ -104,7 +104,7 @@ class SurveyController extends Controller
         return $this->render('TipddySurveyBundle:Survey:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-        ));
+            ));
     }
 
     /**
@@ -149,7 +149,7 @@ class SurveyController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+            ));
     }
 
     /**
@@ -164,7 +164,7 @@ class SurveyController extends Controller
         $form = $this->createForm(new SurveyType(), $entity, array(
             'action' => $this->generateUrl('survey_update', array('id' => $entity->getId())),
             'method' => 'PUT',
-        ));
+            ));
 
         $form->add('submit', 'submit', array('label' => 'Update'));
 
@@ -198,53 +198,32 @@ class SurveyController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+            ));
     }
     /**
      * Deletes a Survey entity.
      *
      */
-   
+
     public function deleteAction(Request $request, $id)
     {
-       $em = $this->getDoctrine()->getManager();
-       
-       $entity = $em->getRepository('TipddySurveyBundle:Survey')->find($id);
+     $em = $this->getDoctrine()->getManager();
 
-       if (!$entity) {
-           throw $this->createNotFoundException('Unable to find Survey entity.');
-       }
+     $entity = $em->getRepository('TipddySurveyBundle:Survey')->find($id);
 
-        $em->remove($entity);
-        $em->flush();
+     if (!$entity) {
+         throw $this->createNotFoundException('Unable to find Survey entity.');
+     }
+
+     $em->remove($entity);
+     $em->flush();
 
 
-        return $this->redirect($this->generateUrl('survey'));
-    }
+     return $this->redirect($this->generateUrl('survey'));
+ }
+
 
    
-   
-   /*
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('TipddySurveyBundle:Survey')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Survey entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('survey'));
-    }
-   */
     /**
      * Creates a form to delete a Survey entity by id.
      *
@@ -255,10 +234,16 @@ class SurveyController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('survey_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
+        ->setAction($this->generateUrl('survey_delete', array('id' => $id)))
+        ->setMethod('DELETE')
+        ->add('submit', 'submit', array('label' => 'Delete'))
+        ->getForm()
         ;
     }
+
+    public function enviarEncuestaAction(Request $request) {
+        var_dump($request);
+        exit();
+    }
+
 }

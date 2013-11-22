@@ -1,38 +1,44 @@
 {% extends 'TipddyBackendBundle::layout.html.twig' %}
-
 {% block content -%}
-    <fieldset>
-      <legend>Mostrando Encuesta</legend>
-      {{ _self.fieldReadText('title', entity.title, 'Título' ) }}
-      {{ _self.fieldReadText('description', entity.description, 'Descripción' ) }}   
-      {% for obj in entity.questions %}
-             <div class="q-titulo">{{ obj.question }}</div>
-             {% set typeAnswer = obj.answerType | lower %}
-             {% set typeAnswer = typeAnswer == 'text' ? 'answer' : typeAnswer  %}
-                
-                {% for answer in obj.answers %}
-                     {{ attribute(answer, typeAnswer ) }}
-                {% endfor %}
-             
-      {% endfor %}
-      
-         
+<fieldset>
+  <legend>{{ entity.title }}</legend>
+  <div style="float: right">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="SebaThomson">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>  
+  </div>
+  <form id="encuesta" name="encuesta" action="{{ path('survey_send') }}" method="POST">
+    {% for obj in entity.questions %}
+    <fieldset class="question" data-requerido="{{ obj.questionRequired }}">
+      <legend>{{ obj.question }} {% if obj.questionRequired == 1 %}*{% endif %}</legend>
+      {% set typeAnswer   = obj.answerType | lower %}
+      {% set typeQuestion = obj.questionType.id %}
+      {% set typeAnswer   = typeAnswer    == 'text' ? 'answer' : typeAnswer  %}
+      {% set typeChoice   = typeQuestion  == 1 ? 'radio' : 'checkbox'  %}
+      <div class="respuestas" {% if typeChoice == 'checkbox'%}class="group-required"{% endif %}>
+        {% for answer in obj.answers %}
+        <label>
+          <input 
+          type="{{ typeChoice }}" 
+          name="{{ obj.id }}" 
+          value="{{ answer.id }}" 
+          {% if typeChoice == 'radio'%}required{% endif %}
+          />
+          {{ answer.answer }}
+        </label>
+        {% endfor %}
+      </div>
     </fieldset>
-    <p id="nav">
-     <a href="{{ path('survey') }}">Volver a listado</a>
-     |
-     <a href="{{ path('survey_edit', {'id' : entity.id}) }}">Editar</a>
-     |
-     <a href="#">Borrar</a>
-    </p>
-{% endblock %}    
-    
+    {% endfor %}
+    {% include 'TipddyBackendBundle::includes/buttons-form.html.twig' with {'btn_action' : 'Envíar', 'route' : 'survey'} %}   
+  </form>
+</fieldset>
+{% endblock %}
+
 {% macro fieldReadText(element, value, label) %}
-      <div class="">
-          <label for="tipddy_surveybundle_show_{{ element }}">{{ label }}</label>
-          
-          <div class="field-wrapper">
-             {{ value }}
-          </div>
-     </div>
+<div class="">
+  <label for="tipddy_surveybundle_show_{{ element }}">{{ label }}</label>
+  <div class="field-wrapper">
+    {{ value }}
+  </div>
+</div>
 {% endmacro %}          
